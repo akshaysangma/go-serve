@@ -9,10 +9,12 @@ import (
 	"strconv"
 	"syscall"
 
-	"github.com/akshaysangma/go-serve/internals/api-gateway/handlers"
 	"github.com/akshaysangma/go-serve/internals/common/config"
 	"github.com/akshaysangma/go-serve/internals/common/logging"
+	database "github.com/akshaysangma/go-serve/internals/database/postgres"
 	"go.uber.org/zap"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -23,20 +25,20 @@ func main() {
 		os.Exit(1)
 	}
 	// flush all buffer before exiting
-	defer logging.Sync(logger)
+	defer logger.Sync()
 
 	logger.Info("Configuration loaded successfully", zap.Int("port", config.App.Port), zap.String("log_Level", config.Log.Level))
 
-	router := http.NewServeMux()
-	router.Handle("GET /healthcheck", handlers.Healthcheck(logger))
-
-	v1 := http.NewServeMux()
-
-	router.Handle("/v1/", http.StripPrefix("/v1", v1))
+	// creating Db Connection Pool
+	dB, err := database.ConnectDB(config.Database.URL, config.Database.MaxConnections)
+	if err != nil {
+		logger.Fatal("Unable to connect to Database", zap.Error(err))
+	}
+	defer dB.Close()
 
 	apiServer := &http.Server{
 		Addr:    ":" + strconv.Itoa(config.App.Port),
-		Handler: router,
+		Handler: initRoutes(logger),
 	}
 
 	go func() {

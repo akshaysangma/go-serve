@@ -1,0 +1,21 @@
+# sqlc.yaml
+version: "2"
+sql:
+  - schema: "internals/database/postgres/migrations"
+    queries: "internals/database/postgres/queries"
+    engine: "postgresql"
+    gen:
+      go:
+        package: "db" # The Go package name for the generated code
+        out: "internals/database/postgres/sqlc" # Output directory for generated Go code
+        emit_json_tags: true
+        emit_empty_slices: true
+        emit_interface: true # Generate an interface for the Queries struct
+        emit_db_tags: true # Include `db` tags for generated struct fields
+        emit_exact_table_names: false # Use singular table names in generated types (e.g., User instead of Users)
+        sql_package: "pgx/v5" # Use pgx for better performance and features (requires `database/sql` setup)
+        overrides:
+          - db_type: "uuid"
+            go_type: "github.com/google/uuid.UUID" # Use google/uuid for UUIDs
+          - db_type: "timestamptz" # PostgreSQL type for TIMESTAMP WITH TIME ZONE
+            go_type: "time.Time" # Map it directly to time.Time

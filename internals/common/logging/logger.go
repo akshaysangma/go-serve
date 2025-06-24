@@ -39,9 +39,3 @@ func InitLogger(levelStr, encoding string) (*zap.Logger, error) {
 
 	return logger, nil
 }
-
-func Sync(logger *zap.Logger) {
-	if logger != nil {
-		logger.Sync()
-	}
-}
