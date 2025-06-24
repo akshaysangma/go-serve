@@ -1,0 +1,12 @@
+app:
+  port: 8080
+  graceful_shutdown_period: 5s
+
+log:
+  level: info
+  encoding: console
+
+database:
+  url: "postgresql://user:password@localhost:5432/goserve_db?sslmode=disable"
+  max_connections: 10 # Maximum connections to the database pool
+
