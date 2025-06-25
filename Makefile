@@ -1,7 +1,7 @@
 # --- Project Configuration ---
 # Define variables for commonly used paths/commands
 PROJECT_ROOT := $(shell pwd)
-MIGRATIONS_DIR := internals/database/postgres/migrations
+MIGRATIONS_DIR := internal/database/postgres/migrations
 SQLC_CONFIG := sqlc.yaml
 API_GATEWAY_CMD := ./cmd/api-gateway
 API_GATEWAY_BINARY := $(API_GATEWAY_CMD)/api-gateway-app # Binary name

@@ -9,9 +9,14 @@ import (
 	"strconv"
 	"syscall"
 
-	"github.com/akshaysangma/go-serve/internals/common/config"
-	"github.com/akshaysangma/go-serve/internals/common/logging"
-	database "github.com/akshaysangma/go-serve/internals/database/postgres"
+	"github.com/akshaysangma/go-serve/internal/api-gateway/handlers"
+	"github.com/akshaysangma/go-serve/internal/api-gateway/middleware"
+	"github.com/akshaysangma/go-serve/internal/api-gateway/repositories"
+	"github.com/akshaysangma/go-serve/internal/api-gateway/services"
+	"github.com/akshaysangma/go-serve/internal/common/config"
+	"github.com/akshaysangma/go-serve/internal/common/logging"
+	database "github.com/akshaysangma/go-serve/internal/database/postgres"
+	db "github.com/akshaysangma/go-serve/internal/database/postgres/sqlc"
 	"go.uber.org/zap"
 
 	_ "github.com/lib/pq"
@@ -35,10 +40,29 @@ func main() {
 		logger.Fatal("Unable to connect to Database", zap.Error(err))
 	}
 	defer dB.Close()
+	logger.Info("Successfully connected to Database")
+
+	dBQueries := db.New(dB)
+
+	router := http.NewServeMux()
+	router.Handle("GET /health", handlers.Healthcheck(logger))
+
+	// V1 API Group
+	v1 := http.NewServeMux()
+	router.Handle("/v1/", http.StripPrefix("/v1", v1))
+
+	// User V1
+	userRepo := repositories.NewUserRepository(dBQueries)
+	articleRepo := repositories.NewArticleRepository(dBQueries)
+	userService := services.NewUserService(userRepo, articleRepo, dB, logger)
+	userMiddlewareChain := middleware.ChainMiddleware(middleware.RequestLoggerMiddleware(logger))
+	v1.Handle("GET /users/{id}", userMiddlewareChain(handlers.GetUserByIDHandler(userService, logger)))
+	v1.Handle("POST /users", userMiddlewareChain(handlers.CreateUserHandler(userService, logger)))
+	v1.Handle("GET /users", userMiddlewareChain(handlers.ListUsersHandler(userService, logger)))
 
 	apiServer := &http.Server{
 		Addr:    ":" + strconv.Itoa(config.App.Port),
-		Handler: initRoutes(logger),
+		Handler: router,
 	}
 
 	go func() {

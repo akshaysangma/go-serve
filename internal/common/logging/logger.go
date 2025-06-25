@@ -30,6 +30,7 @@ func InitLogger(levelStr, encoding string) (*zap.Logger, error) {
 	config.Level = zap.NewAtomicLevelAt(level)
 	config.Encoding = encoding
 	config.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	config.DisableStacktrace = true
 
 	// AddCallerSkip(1) ensures the correct caller (e.g., handler function) is shown in logs, not this InitLogger function.
 	logger, err := config.Build(zap.AddCallerSkip(1))
