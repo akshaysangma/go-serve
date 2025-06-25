@@ -17,3 +17,4 @@ UPDATE users SET username = $2, email = $3, updated_at = NOW() WHERE id = $1 RET
 
 -- name: DeleteUser :exec
 DELETE FROM users where id = $1;
+

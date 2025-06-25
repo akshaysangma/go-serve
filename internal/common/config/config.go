@@ -11,9 +11,11 @@ import (
 )
 
 type Config struct {
-	App      AppConfig      `mapstructure:"APP"`
-	Log      LogConfig      `mapstructure:"LOG"`
-	Database DatabaseConfig `mapstructure:"DATABASE"`
+	App       AppConfig       `mapstructure:"APP"`
+	Log       LogConfig       `mapstructure:"LOG"`
+	Database  DatabaseConfig  `mapstructure:"DATABASE"`
+	JWT       JWTConfig       `mapstructure:"JWT"`
+	RateLimit RateLimitConfig `mapstructure:"RATE_LIMIT"`
 }
 
 type AppConfig struct {
@@ -29,6 +31,16 @@ type LogConfig struct {
 type DatabaseConfig struct {
 	URL            string `mapstructure:"URL"`
 	MaxConnections int    `mapstructure:"MAX_CONNECTIONS"`
+}
+
+type JWTConfig struct {
+	Secret             string        `mapstructure:"SECERT"`
+	ExpirationDuration time.Duration `mapstructure:"EXPIRATION_DURATION"`
+}
+
+type RateLimitConfig struct {
+	LimitInterval time.Duration `mapstructure:"LIMIT_INTERVAL"`
+	Burst         int           `mapstructure:"BURST"`
 }
 
 func LoadConfig() *Config {

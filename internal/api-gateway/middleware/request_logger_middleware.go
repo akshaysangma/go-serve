@@ -9,8 +9,6 @@ import (
 	"go.uber.org/zap"
 )
 
-type contextKey string
-
 const (
 	RequestLoggerKey contextKey = "requestLogger"
 )

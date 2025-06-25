@@ -10,3 +10,11 @@ database:
   url: "postgresql://user:password@localhost:5432/goserve_db?sslmode=disable"
   max_connections: 10 # Maximum connections to the database pool
 
+jwt:
+  secret: "supersecretjwtsigningkeythatshouldbeverylongandrandom"
+  expiration_duration: 10m
+
+rate_limit:
+  limit_interval: 10s
+  burst: 2
+

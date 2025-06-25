@@ -2,6 +2,8 @@ package middleware
 
 import "net/http"
 
+type contextKey string
+
 type Middleware func(http.Handler) http.Handler
 
 func ChainMiddleware(xs ...Middleware) Middleware {

@@ -7,5 +7,9 @@ meta {
 get {
   url: http://localhost:8080/v1/users
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlZDJmYjUtNjc2Yi00YWVlLWE4NjYtMTkyOTUxYmQ3OTEzIiwiZW1haWwiOiJzdXBlcm1hbkBqdXN0aWNlLmxlYWd1ZSIsInVzZXJuYW1lIjoic3VwZXJtYW4iLCJpc3MiOiJnby1zZXJ2ZSIsInN1YiI6IjY3ZWQyZmI1LTY3NmItNGFlZS1hODY2LTE5Mjk1MWJkNzkxMyIsImF1ZCI6WyJ3ZWIiXSwiZXhwIjoxNzUwODQwOTAzLCJuYmYiOjE3NTA4NDAzMDMsImlhdCI6MTc1MDg0MDMwM30.2zio57kB7sJtfA9ucLIZxuQfKndu5bkff8MLj8-qRkE
 }

@@ -1,0 +1,15 @@
+meta {
+  name: Login
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:8080/v1/login?user=67ed2fb5-676b-4aee-a866-192951bd7913
+  body: json
+  auth: inherit
+}
+
+params:query {
+  user: 67ed2fb5-676b-4aee-a866-192951bd7913
+}
